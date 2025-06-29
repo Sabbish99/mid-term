@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TF-IDF Step-by-Step</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .step {
+      display: none;
+      margin-bottom: 20px;
+    }
+    .step.visible {
+      display: block;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    h2 {
+      color: #333;
+    }
+    p, pre {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="step visible">
+      <h2>Step 1: Input Documents</h2>
+      <p>We have 3 documents:</p>
+      <pre>
+Doc1: "Data science is fun"
+Doc2: "Python is a great language for data science"
+Doc3: "I love exploring data with Python"
+      </pre>
+    </div>
+
+    <div class="step">
+      <h2>Step 2: Count Word Frequencies (TF)</h2>
+      <p>We calculate how many times the words appear and divide by total words:</p>
+      <pre>
+TF("data", Doc1) = 1/4 = 0.25
+TF("science", Doc2) = 1/8 = 0.125
+TF("python", Doc3) = 1/6 ≈ 0.167
+      </pre>
+    </div>
+
+    <div class="step">
+      <h2>Step 3: Inverse Document Frequency (IDF)</h2>
+      <p>Calculate how rare each word is across documents:</p>
+      <pre>
+IDF("data") = log(3/3) = 0
+IDF("science") = log(3/2) ≈ 0.405
+IDF("python") = log(3/2) ≈ 0.405
+      </pre>
+    </div>
+
+    <div class="step">
+      <h2>Step 4: Calculate TF-IDF</h2>
+      <p>Multiply TF and IDF for each word:</p>
+      <pre>
+TF-IDF("data", Doc1) = 0.25 × 0 = 0
+TF-IDF("science", Doc1) = 0.25 × 0.405 ≈ 0.101
+TF-IDF("python", Doc3) = 0.167 × 0.405 ≈ 0.068
+      </pre>
+    </div>
+
+    <div class="step">
+      <h2>Step 5: Interpretation</h2>
+      <p>"data" appears in all docs → low importance.<br>
+      "science" is most relevant in Doc1.<br>
+      "python" is more relevant in Doc3 than Doc2.</p>
+    </div>
+
+    <div class="controls">
+      <button id="backBtn" disabled>Back</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    let currentStep = 0;
+
+    function updateSteps() {
+      steps.forEach((step, i) => {
+        step.classList.toggle('visible', i <= currentStep);
+      });
+      backBtn.disabled = currentStep === 0;
+      nextBtn.disabled = currentStep === steps.length - 1;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateSteps();
+      }
+    });
+
+    backBtn.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateSteps();
+      }
+    });
+  </script>
+</body>
+</html>
